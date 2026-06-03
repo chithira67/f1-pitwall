@@ -11,6 +11,17 @@ console = Console()
 # Enable FastF1 cache — do this ONCE on import
 fastf1.Cache.enable_cache(str(CACHE_DIR))
 
+# Maps FastF1's session.name → our SessionType values
+_FASTF1_NAME_MAP = {
+    "Practice 1":        "FP1",
+    "Practice 2":        "FP2",
+    "Practice 3":        "FP3",
+    "Qualifying":        "Q",
+    "Sprint Qualifying": "SQ",
+    "Sprint":            "S",
+    "Race":              "R",
+}
+
 
 def load_session(
     season: int,
@@ -44,7 +55,7 @@ def load_session(
     session.load(
         telemetry=load_telemetry,
         weather=load_weather,
-        messages=False,   # skip radio — not needed
+        messages=False,
     )
 
     console.print(f"[bold green]Loaded[/] {session.event['EventName']} {session_type}")
@@ -53,14 +64,25 @@ def load_session(
 
 def get_session_info(session: fastf1.core.Session) -> SessionInfo:
     """Extract structured metadata from a loaded session."""
+    raw_name = session.name  # e.g. "Race", "Qualifying"
+    session_type_str = _FASTF1_NAME_MAP.get(raw_name, raw_name)
+
+    try:
+        session_type = SessionType(session_type_str)
+    except ValueError:
+        raise ValueError(
+            f"Unknown FastF1 session name '{raw_name}'. "
+            f"Add it to _FASTF1_NAME_MAP in loader.py."
+        )
+
     return SessionInfo(
         season=session.event["EventDate"].year,
         round_number=int(session.event["RoundNumber"]),
         country=session.event["Country"],
         circuit=session.event["Location"],
-        session_type=SessionType(session.name),
+        session_type=session_type,
         date=session.event["EventDate"],
-        total_laps=int(session.total_laps) if hasattr(session, "total_laps") else None,
+        total_laps=int(session.total_laps) if (hasattr(session, "total_laps") and session.total_laps is not None) else None,
     )
 
 

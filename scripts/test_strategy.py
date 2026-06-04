@@ -45,7 +45,7 @@ from f1pitwall.data_pipeline import (
     parse_all_drivers, save_parsed_session, load_parsed_session,
 )
 
-SEASON, ROUND = 2024, 8
+SEASON, ROUND = 2024, 4
 
 # Always load FastF1 session first — needed for SC analysis
 session = load_session(SEASON, ROUND, "R", load_telemetry=True)

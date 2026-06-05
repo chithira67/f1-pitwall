@@ -15,7 +15,8 @@ dependencies = [
     "python-dotenv>=1.0",
     "rich>=13.0",          # pretty console output
     "pyarrow>=15.0",  
-    "scipy>=1.13",     # fast parquet caching
+    "scipy>=1.13",
+    "scikit-learn>=1.4",     # fast parquet caching
 ]
 
 [project.optional-dependencies]

@@ -91,3 +91,21 @@ def get_strategy_reports(
 def get_schedule(season: int):
     from f1pitwall.data_pipeline import list_rounds
     return list_rounds(season)
+
+@st.cache_data(show_spinner="Building driver DNA profiles...")
+def get_dna_data(season: int, round_number: int):
+    from f1pitwall.driver_dna import (
+        build_dna_vectors, cluster_drivers,
+        build_similarity_ranking, build_dna_profiles,
+        find_optimal_clusters,
+    )
+    race_data  = get_race_data(season, round_number)
+    quali_data = get_quali_data(season, round_number)
+
+    dna_vectors  = build_dna_vectors(race_data, quali_data or None)
+    _, inertias  = find_optimal_clusters(dna_vectors)
+    clustering   = cluster_drivers(dna_vectors, n_clusters=4)
+    similarity   = build_similarity_ranking(dna_vectors)
+    profiles     = build_dna_profiles(dna_vectors, clustering, similarity)
+
+    return dna_vectors, clustering, similarity, profiles, inertias

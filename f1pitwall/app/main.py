@@ -4,8 +4,40 @@ import streamlit as st
 st.set_page_config(
     page_title="F1 Pitwall",
     page_icon="🏎",
-    layout="wide",
+    layout="centered",
     initial_sidebar_state="expanded",
+)
+
+st.markdown(
+    """
+    <style>
+        .stApp { background: linear-gradient(180deg, #0b1020 0%, #111827 100%); }
+        .block-container {
+            padding-top: 0.75rem;
+            padding-bottom: 1rem;
+            max-width: 1300px;
+        }
+        div[data-testid="stTabs"] button {
+            border-radius: 0.75rem 0.75rem 0 0;
+            padding: 0.35rem 0.65rem;
+            font-size: 0.95rem;
+        }
+        div[data-testid="stMetric"] {
+            background: rgba(17, 24, 39, 0.82);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 0.9rem;
+            padding: 0.45rem 0.55rem;
+        }
+        div[data-testid="stDataFrame"] {
+            border-radius: 0.85rem;
+            overflow: hidden;
+        }
+        .stAlert, .stSuccess, .stInfo, .stWarning, .stError {
+            border-radius: 0.85rem;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
 from f1pitwall.app.components.sidebar import render_sidebar
@@ -33,6 +65,7 @@ season, round_number, event_name = render_sidebar()
 
 # ── Header ────────────────────────────────────────────────
 st.title(f"🏎  {event_name} {season}")
+st.caption("Compact race intelligence, cleaner charts, and faster comparisons.")
 st.caption(f"Round {round_number} · F1 Pitwall Analytics")
 st.divider()
 
@@ -64,14 +97,11 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 
 # ── TAB 1: Ratings ────────────────────────────────────────
 with tab1:
-    col1, col2 = st.columns([3, 2])
+    selected_code = render_leaderboard(ratings)
 
-    with col1:
-        selected_code = render_leaderboard(ratings)
-
-    with col2:
-        if selected_code:
-            render_radar(ratings, selected_code)
+    if selected_code:
+        st.markdown("<div style='margin-top: 0.4rem;'></div>", unsafe_allow_html=True)
+        render_radar(ratings, selected_code)
 
     # Pillar breakdown for selected driver
     if selected_code and selected_code in ratings:
@@ -114,22 +144,18 @@ with tab3:
 
 # ── TAB 4: Telemetry ──────────────────────────────────────
 with tab4:
-    col1, col2 = st.columns([3, 1])
-
-    with col1:
-        telem_names = st.multiselect(
-            "Select drivers for telemetry",
-            options=list(all_names.values()),
-            default=list(all_names.values())[:2],
-            key="telem_drivers",
-        )
-    with col2:
-        lap_input = st.number_input(
-            "Lap number (0 = fastest)",
-            min_value=0,
-            max_value=int(total_laps),
-            value=0,
-        )
+    telem_names = st.multiselect(
+        "Select drivers for telemetry",
+        options=list(all_names.values()),
+        default=list(all_names.values())[:2],
+        key="telem_drivers",
+    )
+    lap_input = st.number_input(
+        "Lap number (0 = fastest)",
+        min_value=0,
+        max_value=int(total_laps),
+        value=0,
+    )
 
     telem_codes = [
         code for code, name in all_names.items()

@@ -91,10 +91,18 @@ st.caption(
 st.divider()
 
 # ── Load core data ────────────────────────────────────────
-with st.spinner("Loading session data..."):
-    session   = get_session(season, round_number, session_type)
-    race_info = get_session_info(session)
-    race_data = get_session_data(season, round_number, session_type)
+try:
+    with st.spinner("Loading session data..."):
+        session   = get_session(season, round_number, session_type)
+        race_info = get_session_info(session)
+        race_data = get_session_data(season, round_number, session_type)
+except Exception as e:
+    st.error(
+        f"This session doesn't exist for {event_name}. "
+        f"Please select a different session from the sidebar."
+    )
+    st.caption(f"Error: {e}")
+    st.stop()
 
 if not race_data:
     st.error("No data available for this session. Try another round.")
@@ -188,7 +196,7 @@ if tab1 is not None:
             st.subheader("Qualifying Results")
             st.dataframe(
                 pd.DataFrame(rows),
-                width="stretch",
+                use_container_width=True,
                 hide_index=True,
             )
 

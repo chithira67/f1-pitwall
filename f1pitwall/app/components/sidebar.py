@@ -1,5 +1,6 @@
 # f1pitwall/app/components/sidebar.py
 import streamlit as st
+import fastf1
 from f1pitwall.app.state import get_schedule
 
 SESSION_OPTIONS = {
@@ -11,6 +12,26 @@ SESSION_OPTIONS = {
     "Sprint":            "S",
     "Sprint Qualifying": "SQ",
 }
+
+
+def _get_available_sessions(season: int, round_number: int) -> dict[str, str]:
+    """
+    Return only session types that actually exist for this event.
+    Sprint weekends have S + SQ but no FP2/FP3.
+    Normal weekends have FP1/FP2/FP3 but no S/SQ.
+    """
+    try:
+        event = fastf1.get_event(season, round_number)
+        available = {}
+        for label, code in SESSION_OPTIONS.items():
+            try:
+                event.get_session_name(code)
+                available[label] = code
+            except Exception:
+                pass
+        return available if available else SESSION_OPTIONS
+    except Exception:
+        return SESSION_OPTIONS
 
 
 def render_sidebar() -> tuple[int, int, str, str]:
@@ -43,12 +64,15 @@ def render_sidebar() -> tuple[int, int, str, str]:
     )
     round_number = int(round_numbers[event_names.index(selected_event)])
 
+    # Only show sessions that exist for this event
+    available_sessions = _get_available_sessions(season, round_number)
+
     selected_session_label = st.sidebar.selectbox(
         "Session",
-        options=list(SESSION_OPTIONS.keys()),
+        options=list(available_sessions.keys()),
         index=0,
     )
-    session_type = SESSION_OPTIONS[selected_session_label]
+    session_type = available_sessions[selected_session_label]
 
     st.sidebar.divider()
     st.sidebar.caption(f"Round {round_number} of {len(event_names)}")

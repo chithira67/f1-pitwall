@@ -106,7 +106,7 @@ def render_strategy_overview(
         margin=dict(l=120, r=20, t=40, b=40),
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     # Compound legend
     cols = st.columns(6)
@@ -156,4 +156,4 @@ def render_sc_luck_table(
         vmax=100,
     ).format({"Luck Score": "{:+.0f}"})
 
-    st.dataframe(styled, use_container_width=True, hide_index=True)
+    st.dataframe(styled, width="stretch", hide_index=True)

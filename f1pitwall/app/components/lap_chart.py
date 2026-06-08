@@ -76,7 +76,7 @@ def render_lap_chart(
     )
 
     # Compound legend note
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
     st.caption("Marker colour = tyre compound: 🔴 Soft  🟡 Medium  ⚪ Hard  🟢 Inter  🔵 Wet")
 
 
@@ -121,4 +121,4 @@ def render_gap_chart(
         legend=dict(bgcolor="rgba(0,0,0,0)"),
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")

@@ -188,7 +188,7 @@ if tab1 is not None:
             st.subheader("Qualifying Results")
             st.dataframe(
                 pd.DataFrame(rows),
-                use_container_width=True,
+                width="stretch",
                 hide_index=True,
             )
 

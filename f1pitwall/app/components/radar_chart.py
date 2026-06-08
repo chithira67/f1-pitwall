@@ -86,7 +86,7 @@ def render_radar(
         font=dict(color="#ffffff"),
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     # Compare selector
     all_names = {code: r.full_name for code, r in ratings.items()}
@@ -115,4 +115,4 @@ def render_radar(
                 plot_bgcolor="rgba(0,0,0,0)",
                 font=dict(color="#ffffff"),
             )
-            st.plotly_chart(fig2, use_container_width=True)
+            st.plotly_chart(fig2, width="stretch")

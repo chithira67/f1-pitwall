@@ -41,7 +41,7 @@ def render_leaderboard(ratings: dict[str, DriverRating]) -> str | None:
         vmax=100,
     ).format(precision=1)
 
-    st.dataframe(styled, use_container_width=True, hide_index=True)
+    st.dataframe(styled, width="stretch", hide_index=True)
 
     # Driver selector for detail view
     driver_names = [r.full_name for r in ratings.values()]

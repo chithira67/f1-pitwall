@@ -98,7 +98,7 @@ def render_similarity_map(
         ),
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 
 def render_feature_heatmap(
@@ -147,7 +147,7 @@ def render_feature_heatmap(
     )
     fig.update_traces(textfont=dict(size=9))
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 
 def render_driver_dna_profile(
@@ -195,7 +195,7 @@ def render_driver_dna_profile(
         font=dict(color="#ffffff"),
         showlegend=False,
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     # Feature breakdown bars
     st.markdown("**Feature Breakdown**")
@@ -218,7 +218,7 @@ def render_driver_dna_profile(
             })
         st.dataframe(
             pd.DataFrame(sim_rows),
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
 
@@ -244,4 +244,4 @@ def render_elbow_chart(inertias: list[float]) -> None:
         xaxis=dict(gridcolor="#333", dtick=1),
         yaxis=dict(gridcolor="#333"),
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")

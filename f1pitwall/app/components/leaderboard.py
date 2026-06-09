@@ -23,7 +23,7 @@ def render_leaderboard(ratings: dict[str, DriverRating]) -> str | None:
             "Pace":       round(p["Pace Efficiency"].score, 1) if "Pace Efficiency" in p else None,
             "Tyres":      round(p["Tyre Management"].score, 1) if "Tyre Management" in p else None,
             "Consist.":   round(p["Consistency"].score, 1)     if "Consistency"     in p else None,
-            "Quali":      round(p["Qualifying"].score, 1)      if "Qualifying"      in p else None,
+            "Qualifying":      round(p["Qualifying"].score, 1)      if "Qualifying"      in p else None,
             "TOTAL":      r.composite_score,
         })
 
@@ -35,7 +35,7 @@ def render_leaderboard(ratings: dict[str, DriverRating]) -> str | None:
         vmin=0,
         vmax=100,
     ).background_gradient(
-        subset=["Race Craft", "Pace", "Tyres", "Consist."],
+        subset=["Race Craft", "Pace", "Tyres", "Consist.", "Qualifying"],
         cmap="RdYlGn",
         vmin=0,
         vmax=100,

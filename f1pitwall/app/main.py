@@ -33,13 +33,105 @@ st.markdown(
             }
             div[data-testid="stDataFrame"] {
                 background-color: var(--secondary-background-color);
-        .stAlert, .stSuccess, .stInfo, .stWarning, .stError {
-            border-radius: 0.85rem;
-        }
+            }
+            .stAlert, .stSuccess, .stInfo, .stWarning, .stError {
+                border-radius: 0.85rem;
+            }
+            .homepage-background {
+                background-image: linear-gradient(180deg, rgba(0,0,0,0.5), rgba(15,23,42,0.95)),
+                    url('https://images.unsplash.com/photo-1517632298120-53f5cf2d2407?auto=format&fit=crop&w=1900&q=80');
+                background-size: cover;
+                background-position: center;
+                filter: saturate(1.05);
+                min-height: calc(100vh - 80px);
+                padding: 6rem 2rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .homepage-card {
+                backdrop-filter: blur(18px);
+                background-color: rgba(15, 23, 42, 0.78);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 2rem;
+                padding: 3rem;
+                max-width: 1100px;
+                width: 100%;
+                box-shadow: 0 20px 80px rgba(0,0,0,0.22);
+            }
+            .homepage-card h1 {
+                margin-bottom: 0.5rem;
+                font-size: 3.3rem;
+                letter-spacing: -0.04em;
+            }
+            .homepage-card p {
+                color: var(--text-color);
+                font-size: 1.05rem;
+                line-height: 1.8;
+                opacity: 0.92;
+            }
+            .homepage-pill {
+                display: inline-block;
+                margin: 0 0.5rem 0.5rem 0;
+                padding: 0.7rem 1rem;
+                border-radius: 999px;
+                background: rgba(255,255,255,0.08);
+                border: 1px solid rgba(255,255,255,0.12);
+                font-size: 0.94rem;
+            }
+            .homepage-actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                margin-top: 2rem;
+            }
+            .homepage-action-button {
+                background: linear-gradient(135deg, #e10600 0%, #ff4f4f 100%);
+                color: white !important;
+                border: none;
+                border-radius: 999px;
+                padding: 0.95rem 2rem;
+                font-size: 1rem;
+                font-weight: 600;
+                cursor: pointer;
+            }
+            .homepage-image {
+                width: 100%;
+                border-radius: 1.5rem;
+                box-shadow: 0 30px 80px rgba(0,0,0,0.22);
+                margin-top: 1.5rem;
+            }
     </style>
     """,
     unsafe_allow_html=True,
 )
+
+if "show_app" not in st.session_state:
+    st.session_state.show_app = False
+
+if not st.session_state.show_app:
+    st.markdown(
+        """
+        <div class="homepage-background">
+            <div class="homepage-card">
+                <h1>F1 Pitwall Analytics</h1>
+                <p>
+                    Launch deeper race intelligence built for drivers, teams, and curious fans.
+                    Compare qualifying pace, sprint and race strategy, tyre performance, and driver DNA in one stunning dashboard.
+                </p>
+                <div class="homepage-pill">Sprint weekend insights</div>
+                <div class="homepage-pill">Race and qualifying ratings</div>
+                <div class="homepage-pill">Telemetry explorer</div>
+                <img class="homepage-image" src="https://images.unsplash.com/photo-1517632298120-53f5cf2d2407?auto=format&fit=crop&w=1200&q=80" alt="Race track" />
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    if st.button("Go to F1 Pitwall", key="go_button"):
+        st.session_state.show_app = True
+        st.experimental_rerun()
+    st.stop()
 
 from f1pitwall.app.components.sidebar import render_sidebar
 from f1pitwall.app.components.leaderboard import render_leaderboard

@@ -11,27 +11,28 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-        .stApp { background: linear-gradient(180deg, #0b1020 0%, #111827 100%); }
-        .block-container {
-            padding-top: 0.75rem;
-            padding-bottom: 1rem;
-            max-width: 1300px;
-        }
-        div[data-testid="stTabs"] button {
-            border-radius: 0.75rem 0.75rem 0 0;
-            padding: 0.35rem 0.65rem;
-            font-size: 0.95rem;
-        }
-        div[data-testid="stMetric"] {
-            background: rgba(17, 24, 39, 0.82);
-            border: 1px solid rgba(148, 163, 184, 0.18);
-            border-radius: 0.9rem;
-            padding: 0.45rem 0.55rem;
-        }
-        div[data-testid="stDataFrame"] {
-            border-radius: 0.85rem;
-            overflow: hidden;
-        }
+            .stApp {
+                background-color: var(--background-color);
+            }
+            .block-container {
+                padding-top: 0.75rem;
+                padding-bottom: 1rem;
+                max-width: 1300px;
+                background-color: var(--secondary-background-color);
+            }
+            div[data-testid="stTabs"] button {
+                border-radius: 0.75rem 0.75rem 0 0;
+                padding: 0.35rem 0.65rem;
+                font-size: 0.95rem;
+            }
+            div[data-testid="stMetric"] {
+                background: var(--secondary-background-color);
+                border: 1px solid rgba(148, 163, 184, 0.18);
+                border-radius: 0.9rem;
+                padding: 0.45rem 0.55rem;
+            }
+            div[data-testid="stDataFrame"] {
+                background-color: var(--secondary-background-color);
         .stAlert, .stSuccess, .stInfo, .stWarning, .stError {
             border-radius: 0.85rem;
         }

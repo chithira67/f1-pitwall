@@ -58,7 +58,7 @@ def render_sidebar() -> tuple[int, int, str, str]:
     round_numbers = schedule["RoundNumber"].tolist()
 
     selected_event = st.sidebar.selectbox(
-        "Race",
+        "Event",
         options=event_names,
         index=0,
     )

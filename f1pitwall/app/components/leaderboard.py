@@ -2,6 +2,7 @@
 import pandas as pd
 import streamlit as st
 from f1pitwall.scoring_engine.compositor import DriverRating
+from f1pitwall.app.components.driver_images import get_driver_image, PLACEHOLDER
 
 
 def render_leaderboard(ratings: dict[str, DriverRating]) -> str | None:
@@ -28,7 +29,6 @@ def render_leaderboard(ratings: dict[str, DriverRating]) -> str | None:
 
     df = pd.DataFrame(rows)
 
-    # Colour the TOTAL column as a heatmap
     styled = df.style.background_gradient(
         subset=["TOTAL"],
         cmap="RdYlGn",
@@ -41,9 +41,9 @@ def render_leaderboard(ratings: dict[str, DriverRating]) -> str | None:
         vmax=100,
     ).format(precision=1)
 
-    st.dataframe(styled, width="stretch", hide_index=True)
+    st.dataframe(styled, use_container_width=True, hide_index=True)
 
-    # Driver selector for detail view
+    # ── Driver selector ───────────────────────────────────
     driver_names = [r.full_name for r in ratings.values()]
     selected_name = st.selectbox("Select driver for detail view", driver_names)
 
@@ -51,4 +51,25 @@ def render_leaderboard(ratings: dict[str, DriverRating]) -> str | None:
         (code for code, r in ratings.items() if r.full_name == selected_name),
         None,
     )
+
+    # ── Driver card with image ────────────────────────────
+    if selected_code and selected_code in ratings:
+        r = ratings[selected_code]
+
+        st.markdown("<div style='margin-top: 0.5rem;'></div>", unsafe_allow_html=True)
+
+        col_img, col_info = st.columns([1, 3])
+        with col_img:
+            try:
+                st.image(get_driver_image(selected_code), width=120)
+            except Exception:
+                st.image(PLACEHOLDER, width=120)
+        with col_info:
+            st.markdown(f"### {r.full_name}")
+            st.markdown(f"**Team:** {r.team}")
+            st.markdown(f"**Composite Score:** {r.composite_score:.1f} / 100")
+            st.markdown(
+                f"**Session:** {r.session_key.replace('_', ' · ')}"
+            )
+
     return selected_code

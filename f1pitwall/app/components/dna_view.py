@@ -6,6 +6,7 @@ import pandas as pd
 from f1pitwall.driver_dna.feature_builder import FEATURE_NAMES
 from f1pitwall.driver_dna.clustering import ClusteringOutput
 from f1pitwall.driver_dna import DriverDNAVector
+from f1pitwall.app.components.driver_images import get_driver_image, PLACEHOLDER
 
 CLUSTER_COLORS = [
     "#FF6B6B", "#4ECDC4", "#FFE66D",
@@ -56,7 +57,6 @@ def render_similarity_map(
 
     fig = go.Figure()
 
-    # One trace per cluster for legend grouping
     for cluster_label in df["Cluster"].unique():
         cdf = df[df["Cluster"] == cluster_label]
         fig.add_trace(go.Scatter(
@@ -98,7 +98,7 @@ def render_similarity_map(
         ),
     )
 
-    st.plotly_chart(fig, width="stretch")
+    st.plotly_chart(fig, use_container_width=True)
 
 
 def render_feature_heatmap(
@@ -108,7 +108,6 @@ def render_feature_heatmap(
     """Render the DNA feature heatmap — drivers × features."""
     st.subheader("DNA Feature Heatmap")
 
-    # Sort drivers by cluster then by code
     sorted_codes = sorted(
         dna_vectors.keys(),
         key=lambda c: (
@@ -147,7 +146,7 @@ def render_feature_heatmap(
     )
     fig.update_traces(textfont=dict(size=9))
 
-    st.plotly_chart(fig, width="stretch")
+    st.plotly_chart(fig, use_container_width=True)
 
 
 def render_driver_dna_profile(
@@ -161,18 +160,27 @@ def render_driver_dna_profile(
         st.info("No DNA data for this driver.")
         return
 
-    dna = dna_vectors[driver_code]
+    dna     = dna_vectors[driver_code]
     cluster = clustering.clusters.get(driver_code)
     similar = similarity_rankings.get(driver_code, [])
 
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Driver", dna.full_name)
-    col2.metric("Team", dna.team)
-    col3.metric("Style", cluster.cluster_label if cluster else "—")
+    # ── Driver card with image ────────────────────────────
+    col_img, col_info = st.columns([1, 3])
+    with col_img:
+        try:
+            st.image(get_driver_image(driver_code), width=130)
+        except Exception:
+            st.image(PLACEHOLDER, width=130)
+    with col_info:
+        st.markdown(f"### {dna.full_name}")
+        st.markdown(f"**Team:** {dna.team}")
+        st.markdown(
+            f"**Driving Style:** {cluster.cluster_label if cluster else '—'}"
+        )
 
     st.divider()
 
-    # Radar chart for this driver
+    # ── Radar chart ───────────────────────────────────────
     labels = [f.replace("_", " ").title() for f in FEATURE_NAMES]
     values = [dna.features.get(f, 0.0) * 100 for f in FEATURE_NAMES]
     values_closed = values + [values[0]]
@@ -195,30 +203,43 @@ def render_driver_dna_profile(
         font=dict(color="#ffffff"),
         showlegend=False,
     )
-    st.plotly_chart(fig, width="stretch")
+    st.plotly_chart(fig, use_container_width=True)
 
-    # Feature breakdown bars
+    # ── Feature breakdown bars ────────────────────────────
     st.markdown("**Feature Breakdown**")
     for feat in FEATURE_NAMES:
         val = dna.features.get(feat, 0.0)
         label = feat.replace("_", " ").title()
         st.progress(val, text=f"{label}: {val*100:.0f}%")
 
-    # Similar drivers
+    # ── Similar drivers ───────────────────────────────────
     if similar:
         st.divider()
         st.markdown("**Most Similar Drivers**")
+
         sim_rows = []
         for s in similar[:5]:
             sim_rows.append({
-                "Driver": s.driver_b,
-                "Similarity": f"{s.similarity:.3f}",
+                "Driver":           s.driver_b,
+                "Similarity":       f"{s.similarity:.3f}",
                 "Shared Strengths": ", ".join(s.shared_strengths[:3]) or "—",
-                "Key Difference": s.key_difference.replace("_", " ").title(),
+                "Key Difference":   s.key_difference.replace("_", " ").title(),
             })
+
+        # Show images for top 3 similar drivers
+        top3 = similar[:3]
+        img_cols = st.columns(3)
+        for i, s in enumerate(top3):
+            with img_cols[i]:
+                try:
+                    st.image(get_driver_image(s.driver_b), width=80)
+                except Exception:
+                    st.image(PLACEHOLDER, width=80)
+                st.caption(f"{s.driver_b} — {s.similarity:.3f}")
+
         st.dataframe(
             pd.DataFrame(sim_rows),
-            width="stretch",
+            use_container_width=True,
             hide_index=True,
         )
 
@@ -244,4 +265,4 @@ def render_elbow_chart(inertias: list[float]) -> None:
         xaxis=dict(gridcolor="#333", dtick=1),
         yaxis=dict(gridcolor="#333"),
     )
-    st.plotly_chart(fig, width="stretch")
+    st.plotly_chart(fig, use_container_width=True)

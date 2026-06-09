@@ -1,4 +1,3 @@
-# f1pitwall/app/main.py
 import streamlit as st
 
 st.set_page_config(
@@ -11,128 +10,144 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-            .stApp {
-                background-color: var(--background-color);
-            }
-            .block-container {
-                padding-top: 0.75rem;
-                padding-bottom: 1rem;
-                max-width: 1300px;
-                background-color: var(--secondary-background-color);
-            }
-            div[data-testid="stTabs"] button {
-                border-radius: 0.75rem 0.75rem 0 0;
-                padding: 0.35rem 0.65rem;
-                font-size: 0.95rem;
-            }
-            div[data-testid="stMetric"] {
-                background: var(--secondary-background-color);
-                border: 1px solid rgba(148, 163, 184, 0.18);
-                border-radius: 0.9rem;
-                padding: 0.45rem 0.55rem;
-            }
-            div[data-testid="stDataFrame"] {
-                background-color: var(--secondary-background-color);
-            }
-            .stAlert, .stSuccess, .stInfo, .stWarning, .stError {
-                border-radius: 0.85rem;
-            }
-            .homepage-background {
-                background-image: linear-gradient(180deg, rgba(0,0,0,0.5), rgba(15,23,42,0.95)),
-                    url('https://images.unsplash.com/photo-1517632298120-53f5cf2d2407?auto=format&fit=crop&w=1900&q=80');
-                background-size: cover;
-                background-position: center;
-                filter: saturate(1.05);
-                min-height: calc(100vh - 80px);
-                padding: 6rem 2rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .homepage-card {
-                backdrop-filter: blur(18px);
-                background-color: rgba(15, 23, 42, 0.78);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 2rem;
-                padding: 3rem;
-                max-width: 1100px;
-                width: 100%;
-                box-shadow: 0 20px 80px rgba(0,0,0,0.22);
-            }
-            .homepage-card h1 {
-                margin-bottom: 0.5rem;
-                font-size: 3.3rem;
-                letter-spacing: -0.04em;
-            }
-            .homepage-card p {
-                color: var(--text-color);
-                font-size: 1.05rem;
-                line-height: 1.8;
-                opacity: 0.92;
-            }
-            .homepage-pill {
-                display: inline-block;
-                margin: 0 0.5rem 0.5rem 0;
-                padding: 0.7rem 1rem;
-                border-radius: 999px;
-                background: rgba(255,255,255,0.08);
-                border: 1px solid rgba(255,255,255,0.12);
-                font-size: 0.94rem;
-            }
-            .homepage-actions {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 1rem;
-                margin-top: 2rem;
-            }
-            .homepage-action-button {
-                background: linear-gradient(135deg, #e10600 0%, #ff4f4f 100%);
-                color: white !important;
-                border: none;
-                border-radius: 999px;
-                padding: 0.95rem 2rem;
-                font-size: 1rem;
-                font-weight: 600;
-                cursor: pointer;
-            }
-            .homepage-image {
-                width: 100%;
-                border-radius: 1.5rem;
-                box-shadow: 0 30px 80px rgba(0,0,0,0.22);
-                margin-top: 1.5rem;
-            }
+        .stApp { background: linear-gradient(180deg, #0b1020 0%, #111827 100%); }
+        .block-container {
+            padding-top: 0.75rem;
+            padding-bottom: 1rem;
+            max-width: 1300px;
+        }
+        div[data-testid="stTabs"] button {
+            border-radius: 0.75rem 0.75rem 0 0;
+            padding: 0.35rem 0.65rem;
+            font-size: 0.95rem;
+        }
+        div[data-testid="stMetric"] {
+            background: rgba(17, 24, 39, 0.82);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 0.9rem;
+            padding: 0.45rem 0.55rem;
+        }
+        div[data-testid="stDataFrame"] {
+            border-radius: 0.85rem;
+            overflow: hidden;
+        }
+        .stAlert, .stSuccess, .stInfo, .stWarning, .stError {
+            border-radius: 0.85rem;
+        }
+
+        /* ── Full-screen hero ── */
+        .hero-wrap {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            background:
+                linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.75)),
+                url("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600");
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            z-index: 0;
+        }
+        .hero-box {
+            text-align: center;
+        }
+        .hero-logo {
+            width: 130px;
+            max-width: 65%;
+            margin-bottom: 16px;
+        }
+        .hero-title {
+            color: #fff;
+            font-size: 3.2rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            margin: 0 0 10px;
+            line-height: 1.1;
+        }
+        .hero-sub {
+            color: #cbd5e1;
+            font-size: 1.05rem;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── Push Streamlit's block container to sit on top of hero ── */
+        .block-container {
+            position: relative;
+            z-index: 1;
+            background: transparent !important;
+        }
+
+        /* ── Hide default Streamlit padding/chrome on hero page ── */
+        .hero-page header[data-testid="stHeader"] { display: none !important; }
+        .hero-page [data-testid="stDecoration"]   { display: none !important; }
+
+        /* ── Spacer to push button down to hero center ── */
+        .hero-spacer {
+            height: 62vh;
+        }
+
+        /* ── Enter button ── */
+        div[data-testid="stButton"] > button {
+            background: linear-gradient(90deg, #E10600, #ff4242) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 999px !important;
+            padding: 15px 56px !important;
+            font-size: 1.2rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 1px !important;
+            box-shadow: 0 12px 35px rgba(225,6,0,.50) !important;
+            transition: transform .15s ease, box-shadow .15s ease !important;
+        }
+        div[data-testid="stButton"] > button:hover {
+            transform: scale(1.06) !important;
+            box-shadow: 0 16px 45px rgba(225,6,0,.65) !important;
+            color: #fff !important;
+        }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
+# ── Hero landing page ─────────────────────────────────────
 if "show_app" not in st.session_state:
     st.session_state.show_app = False
 
 if not st.session_state.show_app:
+    # Full-screen hero rendered as fixed background
     st.markdown(
         """
-        <div class="homepage-background">
-            <div class="homepage-card">
-                <h1>F1 Pitwall Analytics</h1>
-                <p>
-                    Launch deeper race intelligence built for drivers, teams, and curious fans.
-                    Compare qualifying pace, sprint and race strategy, tyre performance, and driver DNA in one stunning dashboard.
-                </p>
-                <div class="homepage-pill">Sprint weekend insights</div>
-                <div class="homepage-pill">Race and qualifying ratings</div>
-                <div class="homepage-pill">Telemetry explorer</div>
-                <img class="homepage-image" src="https://images.unsplash.com/photo-1517632298120-53f5cf2d2407?auto=format&fit=crop&w=1200&q=80" alt="Race track" />
-            </div>
+        <div class="hero-wrap">
+          <div class="hero-box">
+            <img class="hero-logo"
+              src="https://upload.wikimedia.org/wikipedia/commons/3/33/F1.svg">
+            <div class="hero-title">F1 PITWALL</div>
+            <div class="hero-sub">Race Analytics &bull; Strategy &bull; Telemetry &bull; Driver DNA</div>
+          </div>
         </div>
+        <!-- spacer so Streamlit button renders at vertical center -->
+        <div class="hero-spacer"></div>
         """,
         unsafe_allow_html=True,
     )
-    if st.button("Go to F1 Pitwall", key="go_button"):
-        st.session_state.show_app = True
-        st.experimental_rerun()
+    # Button centered via columns, floats over the fixed hero
+    _, col, _ = st.columns([2, 1, 2])
+    with col:
+        if st.button("🏁  ENTER DASHBOARD", use_container_width=True):
+            st.session_state.show_app = True
+            try:
+                st.rerun()
+            except Exception:
+                st.experimental_rerun()
     st.stop()
 
+# ── Dashboard imports ─────────────────────────────────────
 from f1pitwall.app.components.sidebar import render_sidebar
 from f1pitwall.app.components.leaderboard import render_leaderboard
 from f1pitwall.app.components.radar_chart import render_radar

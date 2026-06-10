@@ -13,7 +13,6 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-        .stApp { background: linear-gradient(180deg, #0b1020 0%, #111827 100%); }
         .block-container {
             padding-top: 0.75rem;
             padding-bottom: 1rem;
@@ -25,7 +24,6 @@ st.markdown(
             font-size: 0.95rem;
         }
         div[data-testid="stMetric"] {
-            background: rgba(17, 24, 39, 0.82);
             border: 1px solid rgba(148, 163, 184, 0.18);
             border-radius: 0.9rem;
             padding: 0.45rem 0.55rem;
@@ -56,14 +54,8 @@ st.markdown(
             gap: 2rem;
             z-index: 0;
         }
-        .hero-box {
-            text-align: center;
-        }
-        .hero-logo {
-            width: 130px;
-            max-width: 65%;
-            margin-bottom: 16px;
-        }
+        .hero-box { text-align: center; }
+        .hero-logo { width: 130px; max-width: 65%; margin-bottom: 16px; }
         .hero-title {
             color: #fff;
             font-size: 3.2rem;
@@ -79,21 +71,15 @@ st.markdown(
             letter-spacing: 0.5px;
         }
 
-        /* ── Push Streamlit's block container to sit on top of hero ── */
+        /* ── Push Streamlit block container over hero ── */
         .block-container {
             position: relative;
             z-index: 1;
             background: transparent !important;
         }
 
-        /* ── Hide default Streamlit padding/chrome on hero page ── */
-        .hero-page header[data-testid="stHeader"] { display: none !important; }
-        .hero-page [data-testid="stDecoration"]   { display: none !important; }
-
-        /* ── Spacer to push button down to hero center ── */
-        .hero-spacer {
-            height: 62vh;
-        }
+        /* ── Spacer to push button to vertical center ── */
+        .hero-spacer { height: 62vh; }
 
         /* ── Enter button ── */
         div[data-testid="stButton"] > button {
@@ -123,7 +109,6 @@ if "show_app" not in st.session_state:
     st.session_state.show_app = False
 
 if not st.session_state.show_app:
-    # Full-screen hero rendered as fixed background
     st.markdown(
         """
         <div class="hero-wrap">
@@ -134,20 +119,15 @@ if not st.session_state.show_app:
             <div class="hero-sub">Race Analytics &bull; Strategy &bull; Telemetry &bull; Driver DNA</div>
           </div>
         </div>
-        <!-- spacer so Streamlit button renders at vertical center -->
         <div class="hero-spacer"></div>
         """,
         unsafe_allow_html=True,
     )
-    # Button centered via columns, floats over the fixed hero
     _, col, _ = st.columns([2, 1, 2])
     with col:
         if st.button("🏁  ENTER DASHBOARD", use_container_width=True):
             st.session_state.show_app = True
-            try:
-                st.rerun()
-            except Exception:
-                st.experimental_rerun()
+            st.rerun()
     st.stop()
 
 # ── Dashboard imports ─────────────────────────────────────
